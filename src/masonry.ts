@@ -1,26 +1,24 @@
 /*!
- * Masonry v1.0.3
+ * Masonry v1.0.4
  * The masonry library we need, but don't deserve
  * https://fristys.me
  * MIT License
  * by Momchil Georgiev
  */
+export interface MasonryOptions {
+  columns?: number;
+  columnBreakpoints?: any,
+  gutter?: number;
+  gutterUnit?: string;
+}
+
 export class Masonry {
   private columns: number = 4;
   private columnBreakpoints: any;
   private gutter: number = 10;
   private gutterUnit: string = 'px';
 
-  constructor(
-    private masonryContainer: any,
-
-    options?: {
-      columns?: number;
-      columnBreakpoints?: any,
-      gutter?: number;
-      gutterUnit?: string;
-    }
-  ) {
+  constructor(private masonryContainer: any, options?: MasonryOptions) {
     if (!this.masonryContainer) throw new Error('Masonry container not found.');
 
     if (options) {

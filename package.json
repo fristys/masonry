@@ -1,6 +1,6 @@
 {
   "name": "@fristys/masonry",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A simple masonry library written in TypeScript",
   "main": "lib/masonry.js",
   "scripts": {
