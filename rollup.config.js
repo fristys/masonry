@@ -11,7 +11,7 @@ export default {
     {
       file: 'lib/masonry.browser.js',
       format: 'iife',
-      name: 'Masonry'
+      name: 'FristysMasonry'
     }
   ],
   plugins: [typescript(), uglify()]

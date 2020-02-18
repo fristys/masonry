@@ -5,7 +5,7 @@
  * MIT License
  * by Momchil Georgiev
  */
-export default class Masonry {
+export class Masonry {
   private columns: number = 4;
   private columnBreakpoints: any;
   private gutter: number = 10;
