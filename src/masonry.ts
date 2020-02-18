@@ -1,5 +1,5 @@
 /*!
- * Masonry v1.0.0
+ * Masonry v1.0.3
  * The masonry library we need, but don't deserve
  * https://fristys.me
  * MIT License
@@ -45,14 +45,14 @@ export class Masonry {
   }
 
   init(): void {
+    this.resetAllPositions();
+    this.setItemPositions();
+  }
+
+  private setItemPositions(): void {
     const columns = this.getColumnsForViewportSize();
     const columnWidth = `calc(${100 / columns}% - ${this.gutter}${this.gutterUnit})`;
 
-    this.resetAllPositions(columnWidth);
-    this.setItemPositions(columns, columnWidth);
-  }
-
-  private setItemPositions(columns: number, columnWidth: string): void {
     if (this.masonryContainer.style.position !== 'relative')
       this.masonryContainer.style.position = 'relative';
 
@@ -69,27 +69,30 @@ export class Masonry {
 
     // Iterate over items row by row
     const rowsLength = rows.length;
-    let colIterator = 0;
+    let rowsIterator = 0;
+    let containerHeight = 0;
 
-    while (colIterator < rowsLength) {
-      const row = rows[colIterator];
+    while (rowsIterator < rowsLength) {
+      const row = rows[rowsIterator];
 
       // Iterate over the columns in this row
       const rowLength = row.length;
-      let rowIterator = 0;
+      let colsIterator = 0;
 
-      while (rowIterator < rowLength) {
-        const col = row[rowIterator];
+      while (colsIterator < rowLength) {
+        const col = row[colsIterator];
 
         // Set position and width
         if (col.style.position !== 'absolute') col.style.position = 'absolute';
 
+        col.style.width = columnWidth;
+
         // Set top value to 0 if this is the first row
-        if (colIterator === 0) {
+        if (rowsIterator === 0) {
           col.style.top = 0;
         } else {
           // Set top value to the top + height of the column above this one
-          const prevRowSibling = rows[colIterator - 1][rowIterator];
+          const prevRowSibling = rows[rowsIterator - 1][colsIterator];
 
           if (prevRowSibling) {
             const siblingTop = parseInt(getComputedStyle(prevRowSibling)['top'], 10);
@@ -99,39 +102,32 @@ export class Masonry {
         }
 
         // Set left value to 0 if this is the first column in the row
-        if (rowIterator === 0) {
+        if (colsIterator === 0) {
           col.style.left = 0;
         } else {          
           // Set left value to width + gutters of previous column in this row
-          const prevCol = row[rowIterator - 1];
+          const prevCol = row[colsIterator - 1];
 
-          col.style.left = `calc(${(parseInt(getComputedStyle(prevCol)['width'], 10) * rowIterator)}px + ${this.gutter * rowIterator}${this.gutterUnit}`;
+          col.style.left = `calc(${(parseInt(getComputedStyle(prevCol)['width'], 10) * colsIterator)}px + ${this.gutter * colsIterator}${this.gutterUnit}`;
         }
 
-        rowIterator++;
+        if (rowsIterator === rowLength - 1) {
+          const columnHeight = col.getBoundingClientRect().top + document.body.scrollTop + col['offsetHeight'];
+
+          if (containerHeight < columnHeight) containerHeight = columnHeight;
+        }
+
+        colsIterator++;
       }
 
-      colIterator++;
+      rowsIterator++;
     }
 
     // Setting the container height to the tallest column's height
-    const lastRow = rows[rows.length - 1];
-    let containerHeight = 0;
-
-    let columnHeightsIterator = columns;
-
-    while (columnHeightsIterator--) {
-      const column = lastRow[columnHeightsIterator];
-      const columnHeight = column.getBoundingClientRect().top + document.body.scrollTop + column['offsetHeight'];
-
-      if (containerHeight < columnHeight)
-        containerHeight = columnHeight;
-    }
-
-    this.masonryContainer.style.height = `calc(${containerHeight}px + ${this.gutter}${this.gutterUnit})`
+    this.masonryContainer.style.height = `calc(${containerHeight}px + ${this.gutter}${this.gutterUnit})`;
   }
 
-  private resetAllPositions(columnWidth: string): void {
+  private resetAllPositions(): void {
     const $children = this.masonryContainer.children;
     let len = $children.length;
 
@@ -140,8 +136,7 @@ export class Masonry {
 
       item.style.top = '';
       item.style.left = '';
-
-      if (item.style.width !== columnWidth) item.style.width = columnWidth;
+      item.style.width = '';
     }
 
     this.masonryContainer.style.height = '';
@@ -151,7 +146,7 @@ export class Masonry {
     if (!this.columnBreakpoints) return this.columns;
 
     const viewportWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    const keys = Object.keys(this.columnBreakpoints);
+    const keys = Object.keys(this.columnBreakpoints).sort((a: any, b: any) => (b - a));
 
     let keysIterator = keys.length;
 
