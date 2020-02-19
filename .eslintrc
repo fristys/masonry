@@ -1,0 +1,36 @@
+{
+    "extends": "airbnb-typescript",
+    "parserOptions": {
+        "project": "./tsconfig.json",
+        "ecmaVersion": 7,
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": false,
+            "experimentalObjectRestSpread": true
+        }
+    },
+    "env": {
+        "shared-node-browser": true,
+        "commonjs": true
+    },
+    "settings": {
+        "react": {
+            "version": "999.999.999"
+        }
+    },
+    "rules": {
+        "curly": ["error", "multi-line"],
+        "indent": [
+            "error",
+            2
+        ],
+        "no-plusplus": "off",
+        "no-prototype-builtins": "off",
+        "max-len": [
+            "warn",
+            200
+        ],
+        "class-methods-use-this": "off",
+        "nonblock-statement-body-position": ["error", "any"]
+    }
+}

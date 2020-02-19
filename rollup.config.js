@@ -1,5 +1,7 @@
 import typescript from 'rollup-plugin-typescript2';
 import { uglify } from 'rollup-plugin-uglify';
+import { eslint } from 'rollup-plugin-eslint';
+
 
 export default {
   input: 'src/masonry.ts',
@@ -14,5 +16,5 @@ export default {
       name: 'FristysMasonry'
     }
   ],
-  plugins: [typescript(), uglify()]
+  plugins: [eslint(), typescript(), uglify()]
 };

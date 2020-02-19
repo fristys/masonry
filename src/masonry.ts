@@ -1,5 +1,5 @@
 /*!
- * Masonry v1.0.4
+ * Masonry v1.0.5
  * The masonry library we need, but don't deserve
  * https://fristys.me
  * MIT License
@@ -7,35 +7,31 @@
  */
 export interface MasonryOptions {
   columns?: number;
-  columnBreakpoints?: any,
+  columnBreakpoints?: any;
   gutter?: number;
   gutterUnit?: string;
 }
 
 export class Masonry {
   private columns: number = 4;
+
   private columnBreakpoints: any;
+
   private gutter: number = 10;
+
   private gutterUnit: string = 'px';
 
   constructor(private masonryContainer: any, options?: MasonryOptions) {
     if (!this.masonryContainer) throw new Error('Masonry container not found.');
 
     if (options) {
-      if (options.hasOwnProperty('columns') && typeof options.columns === 'number')
-        this.columns = options.columns;
-      
-      if (options.hasOwnProperty('columnBreakpoints'))
-        this.columnBreakpoints = options.columnBreakpoints;
-      
-      if (options.hasOwnProperty('columnBreakpoints'))
-        this.columnBreakpoints = options.columnBreakpoints;
-      
-      if (options.hasOwnProperty('gutter') && typeof options.gutter === 'number')
-        this.gutter = options.gutter;
-      
-      if (options.hasOwnProperty('gutterUnit') && typeof options.gutterUnit === 'string')
-        this.gutterUnit = options.gutterUnit;
+      if (options.hasOwnProperty('columns') && typeof options.columns === 'number') this.columns = options.columns;
+
+      if (options.hasOwnProperty('columnBreakpoints')) this.columnBreakpoints = options.columnBreakpoints;
+
+      if (options.hasOwnProperty('gutter') && typeof options.gutter === 'number') this.gutter = options.gutter;
+
+      if (options.hasOwnProperty('gutterUnit') && typeof options.gutterUnit === 'string') this.gutterUnit = options.gutterUnit;
     }
 
     this.init();
@@ -51,8 +47,7 @@ export class Masonry {
     const columns = this.getColumnsForViewportSize();
     const columnWidth = `calc(${100 / columns}% - ${this.gutter}${this.gutterUnit})`;
 
-    if (this.masonryContainer.style.position !== 'relative')
-      this.masonryContainer.style.position = 'relative';
+    if (this.masonryContainer.style.position !== 'relative') this.masonryContainer.style.position = 'relative';
 
     // Divide all items into rows
     const $items = this.masonryContainer.children;
@@ -62,8 +57,7 @@ export class Masonry {
     const itemsLength = $items.length;
     let itemsIterator = 0;
 
-    while (itemsIterator < itemsLength)
-      rows.push([].slice.call($items, itemsIterator, itemsIterator += columns));
+    while (itemsIterator < itemsLength) rows.push([].slice.call($items, itemsIterator, (itemsIterator += columns)));
 
     // Iterate over items row by row
     const rowsLength = rows.length;
@@ -93,24 +87,24 @@ export class Masonry {
           const prevRowSibling = rows[rowsIterator - 1][colsIterator];
 
           if (prevRowSibling) {
-            const siblingTop = parseInt(getComputedStyle(prevRowSibling)['top'], 10);
-            
-            col.style.top = `calc(${siblingTop + prevRowSibling['offsetHeight']}px + ${this.gutter}${this.gutterUnit})`;
+            const siblingTop = parseInt(getComputedStyle(prevRowSibling).top, 10);
+
+            col.style.top = `calc(${siblingTop + prevRowSibling.offsetHeight}px + ${this.gutter}${this.gutterUnit})`;
           }
         }
 
         // Set left value to 0 if this is the first column in the row
         if (colsIterator === 0) {
           col.style.left = 0;
-        } else {          
+        } else {
           // Set left value to width + gutters of previous column in this row
           const prevCol = row[colsIterator - 1];
 
-          col.style.left = `calc(${(parseInt(getComputedStyle(prevCol)['width'], 10) * colsIterator)}px + ${this.gutter * colsIterator}${this.gutterUnit}`;
+          col.style.left = `calc(${parseInt(getComputedStyle(prevCol).width, 10) * colsIterator}px + ${this.gutter * colsIterator}${this.gutterUnit}`;
         }
 
         if (rowsIterator === rowLength - 1) {
-          const columnHeight = col.getBoundingClientRect().top + document.body.scrollTop + col['offsetHeight'];
+          const columnHeight = col.getBoundingClientRect().top + document.body.scrollTop + col.offsetHeight;
 
           if (containerHeight < columnHeight) containerHeight = columnHeight;
         }
@@ -144,7 +138,7 @@ export class Masonry {
     if (!this.columnBreakpoints) return this.columns;
 
     const viewportWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    const keys = Object.keys(this.columnBreakpoints).sort((a: any, b: any) => (b - a));
+    const keys = Object.keys(this.columnBreakpoints).sort((a: any, b: any) => b - a);
 
     let keysIterator = keys.length;
 
@@ -171,9 +165,9 @@ export class Masonry {
   private debounce<T extends Function>(cb: T, wait = 25) {
     let h: any = 0;
 
-    let callable = (...args: any) => {
-        clearTimeout(h);
-        h = setTimeout(() => cb(...args), wait);
+    const callable = (...args: any) => {
+      clearTimeout(h);
+      h = setTimeout(() => cb(...args), wait);
     };
 
     return <T>(<any>callable);
