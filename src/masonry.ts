@@ -1,5 +1,5 @@
 /*!
- * Masonry v1.0.8
+ * Masonry v1.0.9
  * The masonry library we need, but don't deserve
  * https://fristys.me
  * MIT License
@@ -85,9 +85,20 @@ export class Masonry {
       const src = $img.getAttribute('src');
 
       if (src) {
-        $img.addEventListener('load', imageLoadCallback);
-        $img.addEventListener('error', imageLoadCallback);
+        // Image already loaded
+        if ($img.complete) {
+          imagesLoadedCount++;
+        } else {
+          $img.addEventListener('load', imageLoadCallback);
+          $img.addEventListener('error', imageLoadCallback);
+        }
       }
+    }
+
+    if (imagesLoadedCount === totalImages) {
+      this.unbindImageLoad($images, imageLoadCallback);
+      this.init();
+      this.masonryContainer.classList.remove(this.loadingClass);
     }
   }
 
