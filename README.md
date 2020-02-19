@@ -44,6 +44,20 @@ const masonry = new Masonry(document.getElementById('masonry'), options);
 const columnBreakpoints = { 960: 2, 740: 1 };
 ```
 
+`initOnImageLoad: boolean` *(default: `false`)* Will initialize the Masonry exactly after all the images inside the container are loaded. This is done in an event-based way, so no need for any Promise polyfills or 3rd party libraries.
+
+`loadingClass: string` *(default: `masonry-loading`)* Loading class to add to the Masonry container whilst waiting for images inside it to load. This is done with the idea that you might want to hide the container before its images are loaded and Masonry initialized. Example:
+
+```css
+    #masonry {
+      transition: opacity .25s;
+    }
+
+    #masonry.masonry-loading {
+      opacity: 0;
+    }
+```
+
 ## API
 
 `constructor(private masonryContainer: any, options?: MasonryOptions)`
@@ -51,6 +65,9 @@ The constructor. `masonryContainer` can be any valid DOM node / Element. When ca
 
 `init(): void`
 Recalculates and initializes all the masonry columns. Called on object construction and window resize. If you need to re initialize your grid for some reason, you can call this method to do so.
+
+`initOnAllImagesLoaded(): void`
+Called only once on object construction when `initOnImageLoad` is set to `true`. Uses an event-based method to wait out the loading of all the images inside of the Masonry container, unbinds all its events, and then calls `init()`.
 
 `dispose(): void`
 Unbinds the window resize event listener. If you're using this library inside of a framework, you should probably call this method during your destroy lifecycle hook (`onDestroy()`, `destroyed()`, `componentWillUnmount()`, etc.).

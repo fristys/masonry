@@ -10,6 +10,8 @@ export interface MasonryOptions {
   columnBreakpoints?: any;
   gutter?: number;
   gutterUnit?: string;
+  initOnImageLoad?: boolean;
+  loadingClass?: string;
 }
 
 export class Masonry {
@@ -20,6 +22,8 @@ export class Masonry {
   private gutter: number = 10;
 
   private gutterUnit: string = 'px';
+
+  private loadingClass: string = 'masonry-loading';
 
   constructor(private masonryContainer: any, options?: MasonryOptions) {
     if (!this.masonryContainer) throw new Error('Masonry container not found.');
@@ -32,15 +36,68 @@ export class Masonry {
       if (options.hasOwnProperty('gutter') && typeof options.gutter === 'number') this.gutter = options.gutter;
 
       if (options.hasOwnProperty('gutterUnit') && typeof options.gutterUnit === 'string') this.gutterUnit = options.gutterUnit;
+
+      if (options.hasOwnProperty('loadingClass') && typeof options.loadingClass === 'string') this.loadingClass = options.loadingClass;
     }
 
-    this.init();
+    if (options && options.hasOwnProperty('initOnImageLoad') && options.initOnImageLoad) {
+      this.initOnAllImagesLoaded();
+    } else {
+      this.init();
+    }
+
     this.bindEvents();
   }
 
   init(): void {
     this.resetAllPositions();
     this.setItemPositions();
+  }
+
+  initOnAllImagesLoaded(): void {
+    const $images: HTMLImageElement[] = this.masonryContainer.getElementsByTagName('img');
+    const totalImages = $images.length;
+
+    if (!totalImages) {
+      this.init();
+
+      return;
+    }
+
+    this.masonryContainer.classList.add(this.loadingClass);
+
+    let imagesLoadedCount = 0;
+
+    const imageLoadCallback = () => {
+      imagesLoadedCount++;
+
+      if (imagesLoadedCount === totalImages) {
+        this.unbindImageLoad($images, imageLoadCallback);
+        this.init();
+        this.masonryContainer.classList.remove(this.loadingClass);
+      }
+    };
+
+    let imagesIterator = totalImages;
+
+    while (imagesIterator--) {
+      const $img = $images[imagesIterator];
+      const src = $img.getAttribute('src');
+
+      if (src) {
+        $img.addEventListener('load', imageLoadCallback);
+        $img.addEventListener('error', imageLoadCallback);
+      }
+    }
+  }
+
+  private unbindImageLoad($images: HTMLImageElement[], callback: any): void {
+    let iterator = $images.length;
+
+    while (iterator--) {
+      $images[iterator].removeEventListener('load', callback);
+      $images[iterator].removeEventListener('error', callback);
+    }
   }
 
   private setItemPositions(): void {
