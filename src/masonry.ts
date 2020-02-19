@@ -1,5 +1,5 @@
 /*!
- * Masonry v1.0.6
+ * Masonry v1.0.8
  * The masonry library we need, but don't deserve
  * https://fristys.me
  * MIT License
@@ -102,6 +102,7 @@ export class Masonry {
 
   private setItemPositions(): void {
     const columns = this.getColumnsForViewportSize();
+
     const columnWidth = `calc(${100 / columns}% - ${this.gutter}${this.gutterUnit})`;
 
     this.masonryContainer.style.position = 'relative';
@@ -109,12 +110,18 @@ export class Masonry {
     // Divide all items into rows
     const $items = this.masonryContainer.children;
 
-    const rows: any[][] = [[]];
+    const rows: any[][] = [];
 
     const itemsLength = $items.length;
     let itemsIterator = 0;
 
-    while (itemsIterator < itemsLength) rows.push([].slice.call($items, itemsIterator, (itemsIterator += columns)));
+    while (itemsIterator < itemsLength) {
+      const nextIndex = itemsIterator + columns;
+
+      rows.push([].slice.call($items, itemsIterator, nextIndex));
+
+      itemsIterator = nextIndex;
+    }
 
     // Iterate over items row by row
     const rowsLength = rows.length;
@@ -159,7 +166,7 @@ export class Masonry {
           col.style.left = `calc(${parseInt(getComputedStyle(prevCol).width, 10) * colsIterator}px + ${this.gutter * colsIterator}${this.gutterUnit}`;
         }
 
-        if (rowsIterator === rowLength - 1) {
+        if (rowsIterator === rowsLength - 1) {
           const columnHeight = col.getBoundingClientRect().top + document.body.scrollTop + col.offsetHeight;
 
           if (containerHeight < columnHeight) containerHeight = columnHeight;
@@ -172,10 +179,13 @@ export class Masonry {
     }
 
     // Setting the container height to the tallest column's height
-    this.masonryContainer.style.height = `calc(${containerHeight}px + ${this.gutter * rows.length}${this.gutterUnit})`;
+    this.masonryContainer.style.height = `calc(${containerHeight}px + ${this.gutter}${this.gutterUnit})`;
   }
 
   private resetAllPositions(): void {
+    this.masonryContainer.style.position = '';
+    this.masonryContainer.style.height = '';
+
     const $children = this.masonryContainer.children;
     let len = $children.length;
 
@@ -187,23 +197,25 @@ export class Masonry {
       item.style.width = '';
       item.style.position = '';
     }
-
-    this.masonryContainer.style.height = '';
   }
 
   private getColumnsForViewportSize(): number {
     if (!this.columnBreakpoints) return this.columns;
 
     const viewportWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-    const keys = Object.keys(this.columnBreakpoints).sort((a: any, b: any) => b - a);
+    const keys = Object.keys(this.columnBreakpoints).sort((a: any, b: any) => a - b);
 
-    let keysIterator = keys.length;
+    const keysLength = keys.length;
 
-    while (keysIterator--) {
+    let keysIterator = 0;
+
+    while (keysIterator < keysLength) {
       const breakpoint = parseInt(keys[keysIterator], 10);
-      const columns = this.columnBreakpoints[breakpoint];
+      const columns = this.columnBreakpoints[keys[keysIterator]];
 
-      if (viewportWidth <= breakpoint) return columns;
+      if (viewportWidth < breakpoint) return columns;
+
+      keysIterator++;
     }
 
     return this.columns;
