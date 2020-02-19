@@ -1,5 +1,5 @@
 /*!
- * Masonry v1.0.5
+ * Masonry v1.0.6
  * The masonry library we need, but don't deserve
  * https://fristys.me
  * MIT License
@@ -104,7 +104,7 @@ export class Masonry {
     const columns = this.getColumnsForViewportSize();
     const columnWidth = `calc(${100 / columns}% - ${this.gutter}${this.gutterUnit})`;
 
-    if (this.masonryContainer.style.position !== 'relative') this.masonryContainer.style.position = 'relative';
+    this.masonryContainer.style.position = 'relative';
 
     // Divide all items into rows
     const $items = this.masonryContainer.children;
@@ -132,8 +132,7 @@ export class Masonry {
         const col = row[colsIterator];
 
         // Set position and width
-        if (col.style.position !== 'absolute') col.style.position = 'absolute';
-
+        col.style.position = 'absolute';
         col.style.width = columnWidth;
 
         // Set top value to 0 if this is the first row
@@ -173,7 +172,7 @@ export class Masonry {
     }
 
     // Setting the container height to the tallest column's height
-    this.masonryContainer.style.height = `calc(${containerHeight}px + ${this.gutter}${this.gutterUnit})`;
+    this.masonryContainer.style.height = `calc(${containerHeight}px + ${this.gutter * rows.length}${this.gutterUnit})`;
   }
 
   private resetAllPositions(): void {
@@ -186,6 +185,7 @@ export class Masonry {
       item.style.top = '';
       item.style.left = '';
       item.style.width = '';
+      item.style.position = '';
     }
 
     this.masonryContainer.style.height = '';
