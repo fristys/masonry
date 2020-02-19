@@ -16,6 +16,9 @@
 
     function fn() {
       new FristysMasonry.Masonry(document.getElementById('masonry'), { initOnImageLoad: true, gutter: 1.5, gutterUnit: 'rem', columnBreakpoints: { 768: 1, 1024: 2 } });
+      new FristysMasonry.Masonry(document.getElementById('masonry-2'), { initOnImageLoad: true, gutter: 1.5, gutterUnit: 'rem', columnBreakpoints: { 768: 1, 1024: 2 } });
+      new FristysMasonry.Masonry(document.getElementById('masonry-3'), { initOnImageLoad: true, gutter: 1.5, gutterUnit: 'rem', columnBreakpoints: { 768: 1, 1024: 2 } });
+      new FristysMasonry.Masonry(document.getElementById('masonry-4'), { initOnImageLoad: true, gutter: 1.5, gutterUnit: 'rem', columnBreakpoints: { 768: 1, 1024: 2 } });
     }
   </script>
 
@@ -25,17 +28,17 @@
   </style>
 
   <style>
-    #masonry {
+    .masonry {
       width: 80%;
       margin: 1.5rem auto;
       transition: opacity .25s;
     }
 
-    #masonry.masonry-loading {
+    .masonry.masonry-loading {
       opacity: 0;
     }
 
-    #masonry .item {
+    .masonry .item {
       background: #333;
       color: #fff;
       text-align: center;
@@ -47,20 +50,20 @@
       overflow: hidden;
     }
 
-    #masonry .item h3 {
+    .masonry .item h3 {
       font-size: 5em;
       margin: 0;
       padding: 0;
     }
 
-    #masonry .item img {
+    .masonry .item img {
       width: 100%;
     }
   </style>
 </head>
 
 <body>
-  <div id="masonry">
+  <div id="masonry" class="masonry">
     <div class="item" style="height: 550px; background: mediumspringgreen; color: #111;">
       <h3>1</h3>
       <img src="https://placeimg.com/640/480/any" alt="">
@@ -106,6 +109,143 @@
     </div>
   </div>
   <div style="clear: both;">&nbsp;</div>
+  <div id="masonry-2" class="masonry">
+    <div class="item" style="height: 550px; background: mediumspringgreen; color: #111;">
+      <h3>1</h3>
+      <img src="https://placeimg.com/640/480/any" alt="">
+    </div>
+    <div class="item" style="height: 700px; background: pink; color: #333;">
+      <h3>2</h3>
+      <img src="https://placeimg.com/650/650/any" alt="">
+    </div>
+    <div class="item" style="height: 300px; background: tomato; color: #eee;">
+      <h3>3</h3>
+      <img src="https://placeimg.com/480/250/any" alt="">
+    </div>
+    <div class="item" style="background: tan;">
+      <h3>4</h3>
+    </div>
+    <div class="item">
+      <h3>5</h3>
+    </div>
+    <div class="item" style="background: blueviolet;">
+      <h3>6</h3>
+      <img src="https://placeimg.com/640/480/any" alt="">
+    </div>
+    <div class="item">
+      <h3>7</h3>
+    </div>
+    <div class="item" style="height: 850px; background: lightskyblue; color: #666;">
+      <h3>8</h3>
+      <img src="https://placeimg.com/800/800/any" alt="">
+    </div>
+    <div class="item" style="background: palevioletred;">
+      <h3>9</h3>
+      <img src="https://placeimg.com/600/600/any" alt="">
+    </div>
+    <div class="item">
+      <h3>10</h3>
+      <img src="https://placeimg.com/500/500/any" alt="">
+    </div>
+    <div class="item" style="background: seagreen; height: 1200px">
+      <h3>11</h3>
+    </div>
+    <div class="item">
+      <h3>12</h3>
+    </div>
+  </div>
+  <div style="clear: both;">&nbsp;</div>
+  <div id="masonry-3" class="masonry">
+    <div class="item" style="height: 550px; background: mediumspringgreen; color: #111;">
+      <h3>1</h3>
+      <img src="https://placeimg.com/640/480/any" alt="">
+    </div>
+    <div class="item" style="height: 700px; background: pink; color: #333;">
+      <h3>2</h3>
+      <img src="https://placeimg.com/650/650/any" alt="">
+    </div>
+    <div class="item" style="height: 300px; background: tomato; color: #eee;">
+      <h3>3</h3>
+      <img src="https://placeimg.com/480/250/any" alt="">
+    </div>
+    <div class="item" style="background: tan;">
+      <h3>4</h3>
+    </div>
+    <div class="item">
+      <h3>5</h3>
+    </div>
+    <div class="item" style="background: blueviolet;">
+      <h3>6</h3>
+      <img src="https://placeimg.com/640/480/any" alt="">
+    </div>
+    <div class="item">
+      <h3>7</h3>
+    </div>
+    <div class="item" style="height: 850px; background: lightskyblue; color: #666;">
+      <h3>8</h3>
+      <img src="https://placeimg.com/800/800/any" alt="">
+    </div>
+    <div class="item" style="background: palevioletred;">
+      <h3>9</h3>
+      <img src="https://placeimg.com/600/600/any" alt="">
+    </div>
+    <div class="item">
+      <h3>10</h3>
+      <img src="https://placeimg.com/500/500/any" alt="">
+    </div>
+    <div class="item" style="background: seagreen; height: 1200px">
+      <h3>11</h3>
+    </div>
+    <div class="item">
+      <h3>12</h3>
+    </div>
+  </div>
+  <div style="clear: both;">&nbsp;</div>
+  <div id="masonry-4" class="masonry">
+    <div class="item" style="height: 550px; background: mediumspringgreen; color: #111;">
+      <h3>1</h3>
+      <img src="https://placeimg.com/640/480/any" alt="">
+    </div>
+    <div class="item" style="height: 700px; background: pink; color: #333;">
+      <h3>2</h3>
+      <img src="https://placeimg.com/650/650/any" alt="">
+    </div>
+    <div class="item" style="height: 300px; background: tomato; color: #eee;">
+      <h3>3</h3>
+      <img src="https://placeimg.com/480/250/any" alt="">
+    </div>
+    <div class="item" style="background: tan;">
+      <h3>4</h3>
+    </div>
+    <div class="item">
+      <h3>5</h3>
+    </div>
+    <div class="item" style="background: blueviolet;">
+      <h3>6</h3>
+      <img src="https://placeimg.com/640/480/any" alt="">
+    </div>
+    <div class="item">
+      <h3>7</h3>
+    </div>
+    <div class="item" style="height: 850px; background: lightskyblue; color: #666;">
+      <h3>8</h3>
+      <img src="https://placeimg.com/800/800/any" alt="">
+    </div>
+    <div class="item" style="background: palevioletred;">
+      <h3>9</h3>
+      <img src="https://placeimg.com/600/600/any" alt="">
+    </div>
+    <div class="item">
+      <h3>10</h3>
+      <img src="https://placeimg.com/500/500/any" alt="">
+    </div>
+    <div class="item" style="background: seagreen; height: 1200px">
+      <h3>11</h3>
+    </div>
+    <div class="item">
+      <h3>12</h3>
+    </div>
+  </div>
 </body>
 
 </html>

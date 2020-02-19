@@ -1,5 +1,5 @@
 /*!
- * Masonry v1.0.9
+ * Masonry v1.1.0
  * The masonry library we need, but don't deserve
  * https://fristys.me
  * MIT License
@@ -190,7 +190,7 @@ export class Masonry {
     }
 
     // Setting the container height to the tallest column's height
-    this.masonryContainer.style.height = `calc(${containerHeight}px + ${this.gutter}${this.gutterUnit})`;
+    this.masonryContainer.style.height = `calc(${containerHeight - this.masonryContainer.getBoundingClientRect().top}px + ${this.gutter}${this.gutterUnit})`;
   }
 
   private resetAllPositions(): void {
