@@ -15,10 +15,17 @@
     }
 
     function fn() {
-      new FristysMasonry.Masonry(document.getElementById('masonry'), { initOnImageLoad: true, gutter: 1.5, gutterUnit: 'rem', columnBreakpoints: { 768: 1, 1024: 2 } });
+      new FristysMasonry.Masonry(document.getElementById('masonry'), {  onInit: () => console.warn('Bazinga'), trackItemSizeChanges: true, initOnImageLoad: true, gutter: 1.5, gutterUnit: 'rem', columnBreakpoints: { 768: 1, 1024: 2 } });
       new FristysMasonry.Masonry(document.getElementById('masonry-2'), { initOnImageLoad: true, gutter: 1.5, gutterUnit: 'rem', columnBreakpoints: { 768: 1, 1024: 2 } });
       new FristysMasonry.Masonry(document.getElementById('masonry-3'), { initOnImageLoad: true, gutter: 1.5, gutterUnit: 'rem', columnBreakpoints: { 768: 1, 1024: 2 } });
       new FristysMasonry.Masonry(document.getElementById('masonry-4'), { initOnImageLoad: true, gutter: 1.5, gutterUnit: 'rem', columnBreakpoints: { 768: 1, 1024: 2 } });
+    }
+
+    function toggleResize(event) {
+      if (event.target.style.height === '1000px')
+        event.target.style.height = '300px';
+      else
+        event.target.style.height = '1000px';
     }
   </script>
 
@@ -72,7 +79,7 @@
       <h3>2</h3>
       <img src="https://placeimg.com/650/650/any" alt="">
     </div>
-    <div class="item" style="height: 300px; background: tomato; color: #eee;">
+    <div class="item" onclick="toggleResize(event)" style="height: 300px; background: tomato; color: #eee;">
       <h3>3</h3>
       <img src="https://placeimg.com/480/250/any" alt="">
     </div>
