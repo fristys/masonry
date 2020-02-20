@@ -66,7 +66,7 @@ const columnBreakpoints = { 960: 2, 740: 1 };
 
 `useContainerWidth: boolean` *(default: `false`)* Should the Masonry use the container's width instead of the viewport's width when calculating responsive column count?
 
-`trackItemSizeChanges: boolean` *(default: `false`)* Should the Masonry track the changes in size for all the items inside of it and re-initialize on size change? This uses [https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver](ResizeObserver), if you want to use this feature and support legacy browsers, it's a good idea to add a polyfill for it to your project.
+`trackItemSizeChanges: boolean` *(default: `false`)* Should the Masonry track the changes in size for all the items inside of it and re-initialize on size change? This uses [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver), if you want to use this feature and support legacy browsers, it's a good idea to add a polyfill for it to your project.
 
 ## API
 
