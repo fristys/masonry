@@ -1,19 +1,16 @@
+import { debounce } from './utils/debounce';
+import { imagesLoaded } from './utils/images-loaded';
+
+import { MasonryOptions } from './models/options.interface';
+import { Errors } from './models/errors.model';
+
 /*!
- * Masonry v1.1.0
+ * Masonry v1.1.1
  * The masonry library we need, but don't deserve
  * https://fristys.me
  * MIT License
  * by Momchil Georgiev
  */
-export interface MasonryOptions {
-  columns?: number;
-  columnBreakpoints?: any;
-  gutter?: number;
-  gutterUnit?: string;
-  initOnImageLoad?: boolean;
-  loadingClass?: string;
-}
-
 export class Masonry {
   private columns: number = 4;
 
@@ -25,92 +22,108 @@ export class Masonry {
 
   private loadingClass: string = 'masonry-loading';
 
+  private initOnImageLoad: boolean = false;
+
+  private loadedClass: string = 'masonry-loaded';
+
+  private onInit!: () => void;
+
+  private bindOnScroll: boolean = true;
+
+  private useContainerWidth: boolean = false;
+
+  private trackItemSizeChanges: boolean = false;
+
+  private sizeObservers!: { observer: ResizeObserver, target: Element }[];
+
   constructor(private masonryContainer: any, options?: MasonryOptions) {
-    if (!this.masonryContainer) throw new Error('Masonry container not found.');
+    if (!this.masonryContainer) throw new Error(Errors.containerDoesNotExist);
 
-    if (options) {
-      if (options.hasOwnProperty('columns') && typeof options.columns === 'number') this.columns = options.columns;
+    this.setOptions(options);
 
-      if (options.hasOwnProperty('columnBreakpoints')) this.columnBreakpoints = options.columnBreakpoints;
-
-      if (options.hasOwnProperty('gutter') && typeof options.gutter === 'number') this.gutter = options.gutter;
-
-      if (options.hasOwnProperty('gutterUnit') && typeof options.gutterUnit === 'string') this.gutterUnit = options.gutterUnit;
-
-      if (options.hasOwnProperty('loadingClass') && typeof options.loadingClass === 'string') this.loadingClass = options.loadingClass;
-    }
-
-    if (options && options.hasOwnProperty('initOnImageLoad') && options.initOnImageLoad) {
+    if (this.initOnImageLoad) {
       this.initOnAllImagesLoaded();
     } else {
       this.init();
     }
 
+    // DOM Event bindings
     this.bindEvents();
   }
 
+  /**
+   * (Re)Calculates and sets the Masonry
+   */
   init(): void {
     this.resetAllPositions();
     this.setItemPositions();
   }
 
-  initOnAllImagesLoaded(): void {
-    const $images: HTMLImageElement[] = this.masonryContainer.getElementsByTagName('img');
-    const totalImages = $images.length;
+  /**
+   * Unbinds all DOM events bound by this Masonry instance
+   */
+  dispose(): void {
+    if (this.bindOnScroll) window.removeEventListener('resize', this.initDebounced.bind(this));
+    if (this.trackItemSizeChanges) this.unbindItemSizeTracking();
+  }
 
-    if (!totalImages) {
-      this.init();
+  /**
+   * Sets all overrides for this instance depending on `options`
+   */
+  private setOptions(options: MasonryOptions | undefined): void {
+    this.setOptionIfExists(options, 'columns');
+    this.setOptionIfExists(options, 'columnBreakpoints');
+    this.setOptionIfExists(options, 'gutter');
+    this.setOptionIfExists(options, 'gutterUnit');
+    this.setOptionIfExists(options, 'loadingClass');
+    this.setOptionIfExists(options, 'initOnImageLoad');
+    this.setOptionIfExists(options, 'loadedClass');
+    this.setOptionIfExists(options, 'onInit');
+    this.setOptionIfExists(options, 'bindOnScroll');
+    this.setOptionIfExists(options, 'useContainerWidth');
+    this.setOptionIfExists(options, 'trackItemSizeChanges');
+  }
 
-      return;
+  /**
+   * Overrides an option for this instance if it exists in the `options` object
+   */
+  private setOptionIfExists(options: MasonryOptions | undefined, prop: string): void {
+    if (options && options.hasOwnProperty(prop)) {
+      (this as any)[prop] = (options as any)[prop];
     }
+  }
 
+  /**
+   * Calls this.init() with a debounce
+   */
+  private initDebounced = debounce(this.init.bind(this));
+
+  /**
+   * DOM Event bindings
+   */
+  private bindEvents(): void {
+    if (this.bindOnScroll) window.addEventListener('resize', this.initDebounced.bind(this));
+    if (this.trackItemSizeChanges) this.bindItemSizeTracking();
+  }
+
+  /**
+   * Waits for all images inside the masonry container to be loaded
+   * and then calls `this.init()`
+   */
+  private initOnAllImagesLoaded(): void {
+    this.masonryContainer.classList.remove(this.loadedClass);
     this.masonryContainer.classList.add(this.loadingClass);
 
-    let imagesLoadedCount = 0;
-
-    const imageLoadCallback = () => {
-      imagesLoadedCount++;
-
-      if (imagesLoadedCount === totalImages) {
-        this.unbindImageLoad($images, imageLoadCallback);
-        this.init();
-        this.masonryContainer.classList.remove(this.loadingClass);
-      }
-    };
-
-    let imagesIterator = totalImages;
-
-    while (imagesIterator--) {
-      const $img = $images[imagesIterator];
-      const src = $img.getAttribute('src');
-
-      if (src) {
-        // Image already loaded
-        if ($img.complete) {
-          imagesLoadedCount++;
-        } else {
-          $img.addEventListener('load', imageLoadCallback);
-          $img.addEventListener('error', imageLoadCallback);
-        }
-      }
-    }
-
-    if (imagesLoadedCount === totalImages) {
-      this.unbindImageLoad($images, imageLoadCallback);
+    imagesLoaded(this.masonryContainer, () => {
       this.init();
       this.masonryContainer.classList.remove(this.loadingClass);
-    }
+      this.masonryContainer.classList.add(this.loadedClass);
+    });
   }
 
-  private unbindImageLoad($images: HTMLImageElement[], callback: any): void {
-    let iterator = $images.length;
-
-    while (iterator--) {
-      $images[iterator].removeEventListener('load', callback);
-      $images[iterator].removeEventListener('error', callback);
-    }
-  }
-
+  /**
+   * Calculates and sets all the positional styling values
+   */
   private setItemPositions(): void {
     const columns = this.getColumnsForViewportSize();
 
@@ -191,8 +204,14 @@ export class Masonry {
 
     // Setting the container height to the tallest column's height
     this.masonryContainer.style.height = `calc(${containerHeight - this.masonryContainer.getBoundingClientRect().top}px + ${this.gutter}${this.gutterUnit})`;
+
+    // On init callback
+    if (this.onInit) this.onInit();
   }
 
+  /**
+   * Resets all positonal styling values inside this Masonry instance
+   */
   private resetAllPositions(): void {
     this.masonryContainer.style.position = '';
     this.masonryContainer.style.height = '';
@@ -210,10 +229,17 @@ export class Masonry {
     }
   }
 
+  /**
+   * Gets the number of columns for the current viewport size / container size
+   * depending on settings
+   */
   private getColumnsForViewportSize(): number {
     if (!this.columnBreakpoints) return this.columns;
 
-    const viewportWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    const viewportWidth = this.useContainerWidth ? this.masonryContainer.offsetWidth : (
+      window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+    );
+
     const keys = Object.keys(this.columnBreakpoints).sort((a: any, b: any) => a - b);
 
     const keysLength = keys.length;
@@ -232,24 +258,43 @@ export class Masonry {
     return this.columns;
   }
 
-  private bindEvents(): void {
-    window.addEventListener('resize', this.initDebounced.bind(this));
+  private bindItemSizeTracking(): void {
+    if (!('ResizeObserver' in window)) {
+      /* eslint-disable no-console */
+      console.warn(Errors.resizeObserverNotSupported);
+
+      return;
+    }
+
+    if (!this.sizeObservers) this.sizeObservers = [];
+
+    const $items = this.masonryContainer.children;
+    let iterator = $items.length;
+
+    while (iterator--) {
+      const target = $items[iterator];
+      const observer = new ResizeObserver(this.initDebounced.bind(this));
+
+      observer.observe($items[iterator]);
+
+      this.sizeObservers.push({ observer, target });
+    }
   }
 
-  dispose(): void {
-    window.removeEventListener('resize', this.initDebounced.bind(this));
-  }
+  private unbindItemSizeTracking(): void {
+    if (!('ResizeObserver' in window)) {
+      /* eslint-disable no-console */
+      console.warn(Errors.resizeObserverNotSupported);
 
-  private initDebounced = this.debounce(this.init.bind(this));
+      return;
+    }
 
-  private debounce<T extends Function>(cb: T, wait = 25) {
-    let h: any = 0;
+    let iterator = this.sizeObservers.length;
 
-    const callable = (...args: any) => {
-      clearTimeout(h);
-      h = setTimeout(() => cb(...args), wait);
-    };
+    while (iterator--) {
+      const { observer, target } = this.sizeObservers[iterator];
 
-    return <T>(<any>callable);
+      observer.unobserve(target);
+    }
   }
 }
