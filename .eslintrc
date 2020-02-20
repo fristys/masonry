@@ -33,6 +33,7 @@
         "class-methods-use-this": "off",
         "nonblock-statement-body-position": ["error", "any"],
         "import/prefer-default-export": "off",
-        "comma-dangle": "off"
+        "comma-dangle": "off",
+        "linebreak-style": "off"
     }
 }
