@@ -57,6 +57,8 @@ export class Masonry {
   init(): void {
     this.resetAllPositions();
     this.setItemPositions();
+    this.masonryContainer.classList.remove(this.loadingClass);
+    this.masonryContainer.classList.add(this.loadedClass);
   }
 
   /**
