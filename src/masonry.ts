@@ -5,7 +5,7 @@ import { MasonryOptions } from './models/options.interface';
 import { Errors } from './models/errors.model';
 
 /*!
- * Masonry v1.1.1
+ * Masonry v1.1.4
  * The masonry library we need, but don't deserve
  * https://fristys.me
  * MIT License
@@ -192,11 +192,9 @@ export class Masonry {
           col.style.left = `calc(${parseInt(getComputedStyle(prevCol).width, 10) * colsIterator}px + ${this.gutter * colsIterator}${this.gutterUnit}`;
         }
 
-        if (rowsIterator === rowsLength - 1) {
-          const columnHeight = col.getBoundingClientRect().top + document.body.scrollTop + col.offsetHeight;
+        const columnHeight = col.getBoundingClientRect().top + col.offsetHeight;
 
-          if (containerHeight < columnHeight) containerHeight = columnHeight;
-        }
+        if (containerHeight < columnHeight) containerHeight = columnHeight;
 
         colsIterator++;
       }
