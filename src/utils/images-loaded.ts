@@ -49,6 +49,8 @@ export function imagesLoaded(container: any, callback: Function): void {
         $img.addEventListener('load', imageLoadCallback);
         $img.addEventListener('error', imageLoadCallback);
       }
+    } else {
+      imagesLoadedCount++;
     }
   }
 

@@ -34,6 +34,7 @@
         "nonblock-statement-body-position": ["error", "any"],
         "import/prefer-default-export": "off",
         "comma-dangle": "off",
+        "@typescript-eslint/comma-dangle": "off",
         "linebreak-style": "off"
     }
 }
