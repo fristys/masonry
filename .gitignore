@@ -1,5 +1,6 @@
 lib
 .DS_Store
+~/.npm
 # Logs
 logs
 *.log

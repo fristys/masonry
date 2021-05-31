@@ -26,7 +26,8 @@
     "url": "https://github.com/fristys/masonry/issues"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "cache": "~/.npm"
   },
   "homepage": "https://github.com/fristys/masonry#readme",
   "devDependencies": {
