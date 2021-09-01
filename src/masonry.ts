@@ -5,7 +5,7 @@ import { MasonryOptions } from './models/options.interface';
 import { Errors } from './models/errors.model';
 
 /*!
- * Masonry v1.1.6
+ * Masonry v1.1.7
  * The masonry library we need, but don't deserve
  * https://fristys.me
  * MIT License
