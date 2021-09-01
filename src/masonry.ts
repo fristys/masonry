@@ -203,7 +203,7 @@ export class Masonry {
     }
 
     // Setting the container height to the tallest column's height
-    if (this.masonryContainer.getBoundingClientRect().top > 0) {
+    if (this.masonryContainer.getBoundingClientRect().top >= 0) {
       this.masonryContainer.style.height = `calc(${containerHeight - this.masonryContainer.getBoundingClientRect().top}px + ${this.gutter}${this.gutterUnit})`;
     }
 
